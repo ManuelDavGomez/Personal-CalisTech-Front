@@ -1,54 +1,57 @@
 import "../../app/styles/App.css";
+import Login_img from "../../shared/assets/login_hero.jpg";
 
 const LoginPage = () => {
   return (
     <main className="relative min-h-screen">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col items-center lg:flex-row">
-        <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-16 -translate-x-1/2 rounded-full lg:block" />
-        <section className="relative flex-1 px-6 py-12 sm:px-10 lg:px-14 lg:py-20">
-          <div className="absolute inset-0" />
-          <div className="relative z-10 flex h-full flex-col justify-center gap-8">
+      <section className="w-full mx-auto flex min-h-screen max-w-full flex-col items-stretch lg:flex-row lg:items-">
+        <section className="relative flex-1 h-full min-h-screen overflow-hidden flex items-center justify-center">
+          <img
+            src={Login_img}
+            alt="Login Hero"
+            className="absolute inset-0 h-full w-full object-cover opacity-35 mask-[linear-gradient(to_bottom,black_80%,transparent_100%)] md:mask-[linear-gradient(to_right,black_80%,transparent_100%)]"
+          />
+          <div className="relative z-10 flex h-full flex-col justify-center gap-8 px-6 py-12 sm:px-10 lg:px-14">
             <section className="mx-auto max-w-lg lg:max-w-xl">
               <p className="mb-4 inline-flex rounded-full py-2 text-sm uppercase tracking-[0.25em] text-(--primary-color)">
                 CalisTech
               </p>
-              <h1 className="text-3xl font-semibold tracking-tight text-(--primary-color) sm:text-4xl">
-                Domina tu gravedad
+              <h1 className="text-4xl font-semibold tracking-tight text-(--primary-color) sm:text-5xl">
+                DOMINA TU GRAVEDAD
               </h1>
-              <p className="mt-5 text-base leading-7 text-slate-300 sm:text-base">
+              <p className="mt-5 text-base leading-7 text-(--subtext-color) sm:text-base">
                 CalisTech es una plataforma de entrenamiento de calistenia
-                diseñada para ayudarte a mejorar fuerza, movilidad y resistencia
-                con una experiencia visual limpia y responsiva.
+                diseñada para ayudarte a mejorar fuerza
               </p>
             </section>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/20">
-                <p className="text-3xl font-semibold text-(--text-color)">
+              <div>
+                <p className="text-3xl font-semibold text-(--primary-color)">
                   450+
                 </p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Ejercicios disponibles
+                <p className="mt-2 text-sm text-(--subtext-color)">
+                  Ejercicios
                 </p>
               </div>
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/20">
-                <p className="text-3xl font-semibold text-(--text-color)">
+              <div>
+                <p className="text-3xl font-semibold text-(--primary-color)">
                   AI Asistente
                 </p>
-                <p className="mt-2 text-sm text-slate-300">
-                  Entrenamientos personalizados en tiempo real
+                <p className="mt-2 text-sm text-(--subtext-color)">
+                  Entrenamientos
                 </p>
               </div>
             </div>
 
-            <footer className="mt-auto text-sm text-slate-500">
+            <footer className="mt-auto text-sm text-(--subtext-color)">
               copyright © 2026 CalisTech. Todos los derechos reservados.
             </footer>
           </div>
         </section>
 
-        <section className="flex flex-1 items-center justify-center bg-transparent px-6 py-12 sm:px-10 lg:px-14 lg:py-20">
-          <div className="w-full max-w-md rounded-4xl border border-(--primary-color)/20 bg-(--secondary-color)/95 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-10">
+        <section className="flex flex-1 items-center justify-center px-6 py-12 sm:px-10 lg:px-14 lg:py-4">
+          <div className="w-full max-w-md  p-8  backdrop-blur-xl sm:p-10">
             <div className="mb-8 space-y-3 text-center">
               <p className="text-sm uppercase tracking-[0.25em] text-(--primary-color)">
                 Inicio de sesión
@@ -115,7 +118,7 @@ const LoginPage = () => {
             </form>
           </div>
         </section>
-      </div>
+      </section>
     </main>
   );
 };
