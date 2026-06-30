@@ -1,15 +1,15 @@
 import "../../app/styles/App.css";
-import Login_img from "../../shared/assets/login_hero.jpg";
+import Register_img from "../../shared/assets/register_hero.jpg";
 
-const LoginPage = () => {
+const RegisterPage = () => {
   return (
     <main className="relative min-h-screen">
       <section className="w-full mx-auto flex min-h-screen max-w-full flex-col items-stretch lg:flex-row lg:items-">
         <section className="relative flex-1 h-full min-h-screen overflow-hidden flex items-center justify-center">
           <img
-            src={Login_img}
-            alt="Login Hero"
-            className="absolute inset-0 h-full w-full object-cover opacity-35 mask-[linear-gradient(to_bottom,black_80%,transparent_100%)] md:mask-[linear-gradient(to_right,black_80%,transparent_100%)]"
+            src={Register_img}
+            alt="Register Hero"
+            className="absolute inset-0 h-full w-full object-cover object-left opacity-35 mask-[linear-gradient(to_bottom,black_80%,transparent_100%)] md:mask-[linear-gradient(to_right,black_80%,transparent_100%)]"
           />
           <div className="relative z-10 flex h-full flex-col justify-center gap-8 px-6 py-12 sm:px-10 lg:px-14">
             <section className="mx-auto max-w-lg lg:max-w-xl">
@@ -54,17 +54,50 @@ const LoginPage = () => {
           <div className="w-full max-w-md  p-8  backdrop-blur-xl sm:p-0">
             <div className="mb-8 space-y-3 text-center">
               <p className="text-sm uppercase tracking-[0.25em] text-(--primary-color)">
-                Inicio de sesión
+                Registro
               </p>
               <h2 className="text-3xl font-semibold text-(--text-color)">
-                Bienvenido de nuevo
+                Crea tu cuenta
               </h2>
               <p className="text-slate-300">
-                Ingresa tus datos para continuar hacia tu área de entrenamiento.
+                Regístrate para acceder a tu área de entrenamiento.
               </p>
             </div>
 
             <form className="space-y-6">
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-3 block text-sm font-medium text-slate-300"
+                >
+                  Nombre de Usuario
+                </label>
+
+                <section className="flex items-center gap-3 border-b border-(--border-color) py-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="30"
+                    height="30"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#c5c9ac"
+                    stroke-width="2"
+                    stroke-linecap="butt"
+                    stroke-linejoin="arcs"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    placeholder="nombre de usuario"
+                    className="w-full  text-(--text-color) shadow-sm outline-none"
+                  />
+                </section>
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -142,16 +175,16 @@ const LoginPage = () => {
                 type="submit"
                 className="w-full rounded-md bg-(--primary-color) px-5 py-4 text-base font-semibold text-slate-950 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-(--primary-color)/25 cursor-pointer"
               >
-                Iniciar sesión
+                Registrarse
               </button>
 
               <div className="flex items-center gap-3 py-2 text-sm text-(--subtext-color)">
-                <p className="">¿Eres nuevo en el programa elite?</p>
+                <p className="">¿Ya tienes cuenta?</p>
                 <a
-                  href="/register"
+                  href="/login"
                   className="font-semibold text-(--primary-color) hover:text-white"
                 >
-                  Crea Cuenta
+                  Inicia sesión
                 </a>
               </div>
             </form>
@@ -162,4 +195,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
