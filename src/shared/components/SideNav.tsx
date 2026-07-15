@@ -3,31 +3,49 @@
 import { useState } from "react";
 
 const SideNav = () => {
-//   const handleLogout = () => {
-//     clearAuthToken();
-//     navigate("/login", { replace: true });
-//   };
+  //   const handleLogout = () => {
+  //     clearAuthToken();
+  //     navigate("/login", { replace: true });
+  //   };
 
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
 
   // Navigation items array
   const menuItems = [
-    { name: 'Dashboard', icon: '📊' },
-    { name: 'Analytics', icon: '📈' },
-    { name: 'Projects', icon: '📁' }, 
-    { name: 'Settings', icon: '⚙️' },
+    {
+      name: "Dashboard",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#c5c9ac"
+          stroke-width="2"
+          stroke-linecap="butt"
+          stroke-linejoin="arcs"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      ),
+    },
+    { name: "Analytics", icon: "📈" },
+    { name: "Projects", icon: "📁" },
+    { name: "Settings", icon: "⚙️" },
   ];
 
-
   return (
-
-   <div className="flex min-h-screen">
+    <div className="flex min-h-screen">
       {/* 1. Mobile Top Bar / Header */}
       <div className="flex items-center justify-between px-4 py-3 shadow-sm md:hidden fixed top-0 left-0 right-0 z-40">
-        <span className="text-xl font-bold tracking-wider text-indigo-600">Brand</span>
-        <button 
+        <span className="text-xl font-bold tracking-wider text-indigo-600">
+          Brand
+        </span>
+        <button
           onClick={() => setIsOpen(!isOpen)}
           className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           aria-label="Toggle Menu"
@@ -38,39 +56,49 @@ const SideNav = () => {
 
       {/* 2. Dark Overlay Background for Mobile View */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       {/* 3. Sidebar Container */}
-      <aside className={`
-        fixed inset-y-0 left-0 z-50 flex flex-col w-72 border-r border-gray-200 transition-transform duration-300 ease-in-out transform
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+      <aside
+        className={`
+        fixed inset-y-0 left-0 z-50 flex flex-col w-72 bg-(--tertiary-color) transition-transform duration-300 ease-in-out transform
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:static md:z-auto
-      `}>
+      `}
+      >
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <span className="text-2xl font-black text-indigo-600">Calisprogress</span>
-          <button 
+        <article className="flex items-center justify-between px-6 py-8 ">
+          <section className="flex flex-col">
+            <span className="text-xl font-black text-(--primary-color)">
+              Calisprogress
+            </span>
+            <p className="text-sm text-(--subtext-color)">ELITE CALISTHENICS</p>
+          </section>
+
+          <button
             onClick={() => setIsOpen(false)}
-            className="p-1 rounded-md hover:bg-gray-100 md:hidden"
+            className="p-1 rounded-md hover:bg-(--primary-color) md:hidden"
             aria-label="Close Menu"
           >
             <span className="text-xl">✕</span>
           </button>
-        </div>
+        </article>
 
         {/* Sidebar Navigation Links */}
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {menuItems.map((item, index) => (
-            <a
+            <a    
               key={index}
               href={`#${item.name.toLowerCase()}`}
-              className="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors group font-medium"
-            >
-              <span className="text-xl mr-3 text-gray-400 group-hover:text-indigo-500">{item.icon}</span>
+              className="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-(--primary-color) hover:text-indigo-600 transition-colors group font-medium"
+            >   
+              <span className="text-xl mr-4 text-gray-400 group-hover:text-black transition-colors hover:bg-black transform">
+                {item.icon}   
+              </span>
               {item.name}
             </a>
           ))}
@@ -93,13 +121,10 @@ const SideNav = () => {
       {/* 4. Main App Layout Window */}
       <main className="flex-1 p-6 md:p-10 pt-20 md:pt-10 overflow-y-auto">
         <h1 className="text-3xl font-extrabold tracking-tight">hola</h1>
-        <p className="mt-4 text-gray-500 max-w-2xl">
-          xdd
-        </p>
+        <p className="mt-4 text-gray-500 max-w-2xl">xdd</p>
       </main>
     </div>
 
-    
     // <article className="flex w-[15%] h-screen items-start flex-col border border-amber-200">
     //   <section className="flex flex-col items-start justify-center  px-4 py-6">
     //     <h1 className="text-xl font-bold text-(--text-color)">
