@@ -38,3 +38,8 @@ h6 {
 p {
   font-family: "Inter", sans-serif;
 }
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #121212 inset; /* Mismo color de tu fondo */
+  -webkit-text-fill-color: #ffffff !important;      /* Color del texto */
+}

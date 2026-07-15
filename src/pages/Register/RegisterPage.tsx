@@ -1,7 +1,18 @@
 import "../../app/styles/App.css";
 import Register_img from "../../shared/assets/register_hero.jpg";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../shared/utils/auth";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
+
   return (
     <main className="relative min-h-screen">
       <section className="w-full mx-auto flex min-h-screen max-w-full flex-col items-stretch lg:flex-row lg:items-">

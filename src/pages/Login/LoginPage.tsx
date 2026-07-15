@@ -1,7 +1,41 @@
 import "../../app/styles/App.css";
 import Login_img from "../../shared/assets/login_hero.jpg";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated, saveAuthToken } from "../../shared/utils/auth";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
+
+  const handleLogin = async () => {
+    const response = await fetch("http://localhost:3000/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Login successful:", data);
+      saveAuthToken(data.token);
+      navigate("/dashboard", { replace: true });
+      console.log("Token stored in localStorage:", data.token);
+    } else {
+      console.error("Login failed:", response.statusText);
+      navigate("/login");
+    }
+  };
+
   return (
     <main className="relative min-h-screen">
       <section className="w-full mx-auto flex min-h-screen max-w-full flex-col items-stretch lg:flex-row lg:items-">
@@ -94,6 +128,8 @@ const LoginPage = () => {
                     type="email"
                     placeholder="nombre@perfomance.com"
                     className="w-full  text-(--text-color) shadow-sm outline-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </section>
               </div>
@@ -134,6 +170,8 @@ const LoginPage = () => {
                     type="password"
                     placeholder="********"
                     className="text-(--text-color) shadow-sm outline-none "
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </section>
               </div>
@@ -141,6 +179,10 @@ const LoginPage = () => {
               <button
                 type="submit"
                 className="w-full rounded-md bg-(--primary-color) px-5 py-4 text-base font-semibold text-slate-950 transition hover:brightness-110 focus:outline-none focus:ring-4 focus:ring-(--primary-color)/25 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleLogin();
+                }}
               >
                 Iniciar sesión
               </button>
