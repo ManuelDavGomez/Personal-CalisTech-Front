@@ -1,10 +1,18 @@
 import "../../app/styles/App.css";
 import Register_img from "../../shared/assets/register_hero.jpg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../../shared/utils/auth";
 
 const RegisterPage = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,6 +20,38 @@ const RegisterPage = () => {
       navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
+
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = event.target;
+    setFormData((previous) => ({ ...previous, [name]: value }));
+  };
+
+  const handleRegister = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    const response = await fetch("http://localhost:3000/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      setSuccessMessage(
+        "Cuenta creada correctamente. Ahora puedes iniciar sesión.",
+      );
+      setTimeout(() => navigate("/login", { replace: true }), 1200);
+      return;
+    }
+
+    const errorData = await response.json().catch(() => ({}));
+    setErrorMessage(errorData.message || "No se pudo crear la cuenta");
+  };
 
   return (
     <main className="relative min-h-screen">
@@ -75,7 +115,7 @@ const RegisterPage = () => {
               </p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleRegister}>
               <div>
                 <label
                   htmlFor="email"
@@ -105,6 +145,8 @@ const RegisterPage = () => {
                     type="text"
                     placeholder="nombre de usuario"
                     className="w-full  text-(--text-color) shadow-sm outline-none"
+                    value={formData.username}
+                    onChange={handleChange}
                   />
                 </section>
               </div>
@@ -138,6 +180,8 @@ const RegisterPage = () => {
                     type="email"
                     placeholder="nombre@perfomance.com"
                     className="w-full  text-(--text-color) shadow-sm outline-none"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </section>
               </div>
@@ -178,9 +222,23 @@ const RegisterPage = () => {
                     type="password"
                     placeholder="********"
                     className="text-(--text-color) shadow-sm outline-none "
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                 </section>
               </div>
+
+              {errorMessage ? (
+                <p className="rounded-md border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                  {errorMessage}
+                </p>
+              ) : null}
+
+              {successMessage ? (
+                <p className="rounded-md border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+                  {successMessage}
+                </p>
+              ) : null}
 
               <button
                 type="submit"

@@ -15,7 +15,7 @@ const SideNav = () => {
   // Navigation items array
   const menuItems = [
     {
-      name: "Dashboard",
+      name: "Panel",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -33,9 +33,64 @@ const SideNav = () => {
         </svg>
       ),
     },
-    { name: "Analytics", icon: "📈" },
-    { name: "Projects", icon: "📁" },
-    { name: "Settings", icon: "⚙️" },
+    {
+      name: "Libreria",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#c5c9ac"
+          stroke-width="2"
+          stroke-linecap="butt"
+          stroke-linejoin="arcs"
+        >
+          <path d="M12 20v-6m0-6V4"></path>
+          <rect x="3" y="10" width="18" height="4"></rect>
+        </svg>
+      ),
+    },
+    {
+      name: "Rutina IA",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#c5c9ac"
+          stroke-width="2"
+          stroke-linecap="butt"
+          stroke-linejoin="arcs"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+      ),
+    },
+    {
+      name: "Registrar",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#c5c9ac"
+          stroke-width="2"
+          stroke-linecap="butt"
+          stroke-linejoin="arcs"
+        >
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .38 3.83 8.5 8.5 0 0 1-7.63.83h-.79a8.56,8.56,0,0,1-7.63-.83,1.65,1.65,0,0,0,.38-3.83Z"></path>
+        </svg>
+      ),
+    },
   ];
 
   return (
@@ -91,13 +146,13 @@ const SideNav = () => {
         {/* Sidebar Navigation Links */}
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {menuItems.map((item, index) => (
-            <a    
+            <a
               key={index}
               href={`#${item.name.toLowerCase()}`}
-              className="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-(--primary-color) hover:text-indigo-600 transition-colors group font-medium"
-            >   
-              <span className="text-xl mr-4 text-gray-400 group-hover:text-black transition-colors hover:bg-black transform">
-                {item.icon}   
+              className="flex items-center px-4 py-3 text-(--text-color) rounded-lg hover:bg-(--primary-color)  hover:text-black transition-colors group font-medium"
+            >
+              <span className="text-xl mr-4 ">
+                {item.icon}
               </span>
               {item.name}
             </a>
@@ -120,8 +175,26 @@ const SideNav = () => {
 
       {/* 4. Main App Layout Window */}
       <main className="flex-1 p-6 md:p-10 pt-20 md:pt-10 overflow-y-auto">
-        <h1 className="text-3xl font-extrabold tracking-tight">hola</h1>
-        <p className="mt-4 text-gray-500 max-w-2xl">xdd</p>
+        <h1 className="text-3xl font-extrabold tracking-tight">
+          Bienvenido Comandante
+        </h1>
+        <p className="mt-4 text-gray-500 max-w-2xl">Resumen del Rendimiento</p>
+
+        <div className="grid grid-cols-5 grid-rows-5 gap-4 h-150 mt-20">
+          <div className="col-span-2 row-span-2  border border-gray-300">1</div>
+          <div className="col-span-3 row-span-2 col-start-3 border border-gray-300">
+            2
+          </div>
+          <div className="col-span-3 row-span-3 row-start-3 border border-gray-300">
+            3
+          </div>
+          <div className="col-span-2 row-span-2 col-start-4 row-start-3 border border-gray-300">
+            4
+          </div>
+          <div className="col-span-2 col-start-4 row-start-5 border border-gray-300">
+            5
+          </div>
+        </div>
       </main>
     </div>
 

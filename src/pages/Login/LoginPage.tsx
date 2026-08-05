@@ -7,6 +7,7 @@ import { isAuthenticated, saveAuthToken } from "../../shared/utils/auth";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +17,8 @@ const LoginPage = () => {
   }, [navigate]);
 
   const handleLogin = async () => {
+    setErrorMessage("");
+
     const response = await fetch("http://localhost:3000/auth/login", {
       method: "POST",
       headers: {
@@ -26,13 +29,11 @@ const LoginPage = () => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log("Login successful:", data);
-      saveAuthToken(data.token);
+      saveAuthToken(data.token, data.user);
       navigate("/dashboard", { replace: true });
-      console.log("Token stored in localStorage:", data.token);
     } else {
-      console.error("Login failed:", response.statusText);
-      navigate("/login");
+      const errorData = await response.json().catch(() => ({}));
+      setErrorMessage(errorData.error || "No se pudo iniciar sesión");
     }
   };
 
@@ -175,6 +176,12 @@ const LoginPage = () => {
                   />
                 </section>
               </div>
+
+              {errorMessage ? (
+                <p className="rounded-md border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                  {errorMessage}
+                </p>
+              ) : null}
 
               <button
                 type="submit"
