@@ -173,8 +173,8 @@ const SideNav = () => {
 
       {/* 4. Main App Layout Window */}
       <main className="flex-1 overflow-y-auto">
-        <article className="flex flex-col md:flex-row items-center bg-(--secondary-color)">
-          <article className="w-full p-7 py-10">
+        <article className="flex flex-col md:flex-row items-center bg-(--secondary-color) p-8">
+          <article className="w-full">
             <section className="flex items-center gap-2 flex-row pb-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -200,9 +200,13 @@ const SideNav = () => {
             </h1>
           </article>
           <article className="w-full flex gap-5">
-            <button className="p-3 bg-(--primary-color)" > <p className="text-black">EJERCICIO</p></button>
+            <button className="p-3 px-10 bg-(--primary-color) rounded-md">
+              <p className="text-black">EJERCICIO</p>
+            </button>
 
-            <button className="p-3 bg-(--primary-color)" > <p className="text-black">AGREGAR NUEVOS EJERCICIOS</p></button>
+            <button className="p-3 px-10 rounded-md bg-(--primary-color)">
+              <p className="text-black">AGREGAR NUEVOS EJERCICIOS</p>
+            </button>
           </article>
         </article>
       </main>

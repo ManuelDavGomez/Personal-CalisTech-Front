@@ -9,7 +9,6 @@ const RegisterPage = () => {
     username: "",
     email: "",
     password: "",
-    role: "user",
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");

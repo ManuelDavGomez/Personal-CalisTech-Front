@@ -4,6 +4,7 @@ import RegisterPage from "../pages/Register/RegisterPage";
 import DashboardPage from "../pages/dashboard/DashboardPage.tsx";
 import ProtectedRoute from "../shared/components/ProtectedRoute.tsx";
 import AdminPanelPage from "../pages/admin/AdminPage.tsx";
+import LibraryPage from "../pages/Library/LibraryPage.tsx";
 
 function App() {
   return (
@@ -12,8 +13,12 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<DashboardPage />}>
+            <Route path="skills" element={<LibraryPage />} />
+          </Route>
+
           <Route path="/admin" element={<AdminPanelPage />} />
         </Route>
       </Routes>

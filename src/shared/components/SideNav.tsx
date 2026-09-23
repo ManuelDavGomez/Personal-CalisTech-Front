@@ -1,14 +1,17 @@
 // import { clearAuthToken } from "../../shared/utils/auth";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getAuthUser, logout } from "../../shared/utils/auth";
 import { useState } from "react";
 
 const SideNav = () => {
-  //   const handleLogout = () => {
-  //     clearAuthToken();
-  //     navigate("/login", { replace: true });
-  //   };
+  const authUser = getAuthUser();
+  const roleLabel = authUser?.role === "admin" ? "Administrador" : "Usuario";
+  const navigate = useNavigate();
 
-  //   const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -23,7 +26,7 @@ const SideNav = () => {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#c5c9ac"
+          className="stroke-[#c5c9ac] group-hover:stroke-black! "
           stroke-width="2"
           stroke-linecap="butt"
           stroke-linejoin="arcs"
@@ -32,6 +35,7 @@ const SideNav = () => {
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
       ),
+      url: "dashboard",
     },
     {
       name: "Libreria",
@@ -42,15 +46,16 @@ const SideNav = () => {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#c5c9ac"
           stroke-width="2"
           stroke-linecap="butt"
           stroke-linejoin="arcs"
+          className="stroke-[#c5c9ac] group-hover:stroke-black! "
         >
           <path d="M12 20v-6m0-6V4"></path>
           <rect x="3" y="10" width="18" height="4"></rect>
         </svg>
       ),
+      url: "dashboard/skills",
     },
     {
       name: "Rutina IA",
@@ -61,7 +66,7 @@ const SideNav = () => {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#c5c9ac"
+          className="stroke-[#c5c9ac] group-hover:stroke-black!"
           stroke-width="2"
           stroke-linecap="butt"
           stroke-linejoin="arcs"
@@ -81,7 +86,7 @@ const SideNav = () => {
           height="20"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#c5c9ac"
+          className="stroke-[#c5c9ac] group-hover:stroke-black! "
           stroke-width="2"
           stroke-linecap="butt"
           stroke-linejoin="arcs"
@@ -148,33 +153,39 @@ const SideNav = () => {
           {menuItems.map((item, index) => (
             <a
               key={index}
-              href={`#${item.name.toLowerCase()}`}
-              className="flex items-center px-4 py-3 text-(--text-color) rounded-lg hover:bg-(--primary-color)  hover:text-black transition-colors group font-medium"
+              href={`/${item.url?.toLowerCase()}`}
+              className="flex items-center px-4 py-3 text-(--text-color) rounded-lg hover:bg-(--primary-color)  hover:text-black transition-colors group font-medium "
             >
-              <span className="text-xl mr-4 ">
-                {item.icon}
-              </span>
+              <span className="text-xl mr-4 ">{item.icon}</span>
               {item.name}
             </a>
           ))}
         </nav>
 
         {/* Sidebar Footer / User Section */}
-        <div className="p-4 border-t border-gray-100">
+        <div className="p-4">
           <div className="flex items-center gap-3 p-2">
             <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">
               JD
             </div>
             <div>
-              <p className="text-sm font-bold">John Doe</p>
-              <p className="text-xs text-gray-400">john@example.com</p>
+              <p className="text-sm font-bold">{authUser?.username}</p>
+              <p className="text-xs text-gray-400">{authUser?.email}</p>
+              <p className="text-xs text-gray-400">{roleLabel}</p>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="mt-2 rounded-md bg-red-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-red-500"
+              >
+                Cerrar sesión
+              </button>
             </div>
           </div>
         </div>
       </aside>
 
       {/* 4. Main App Layout Window */}
-      <main className="flex-1 p-6 md:p-10 pt-20 md:pt-10 overflow-y-auto">
+      {/* <main className="flex-1 p-6 md:p-10 pt-20 md:pt-10 overflow-y-auto">
         <h1 className="text-3xl font-extrabold tracking-tight">
           Bienvenido Comandante
         </h1>
@@ -195,7 +206,7 @@ const SideNav = () => {
             5
           </div>
         </div>
-      </main>
+      </main> */}
     </div>
 
     // <article className="flex w-[15%] h-screen items-start flex-col border border-amber-200">
