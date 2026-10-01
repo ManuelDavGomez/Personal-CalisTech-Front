@@ -5,12 +5,14 @@ type ExerciseFormState = {
   nombre: string;
   musculos: string;
   dificultad: string;
+  url_img: string;
 };
 
 const initialState: ExerciseFormState = {
   nombre: "",
   musculos: "",
   dificultad: "",
+  url_img: "",
 };
 
 const ExerciseForm = () => {
@@ -47,7 +49,7 @@ const ExerciseForm = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:3000/tasks/skills", {
+      const response = await fetch("http://localhost:3000/exercises/skills", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,6 +100,21 @@ const ExerciseForm = () => {
             onChange={handleChange}
             placeholder="Sentadilla"
             required
+            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="url_img" className="mb-2 block text-sm font-medium text-slate-300">
+            URL de la imagen
+          </label>
+          <input
+            id="url_img"
+            name="url_img"
+            type="text"
+            value={formData.url_img}
+            onChange={handleChange}
+            placeholder="https://example.com/image.jpg"
             className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400"
           />
         </div>

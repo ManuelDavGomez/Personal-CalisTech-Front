@@ -16,6 +16,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />}>
+            <Route index element={<h1 className="text-3xl font-semibold">Bienvenido a CalisTech</h1>} />
             <Route path="skills" element={<LibraryPage />} />
           </Route>
 

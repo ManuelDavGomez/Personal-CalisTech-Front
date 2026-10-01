@@ -2,7 +2,10 @@ import "../../app/styles/App.css";
 import Login_img from "../../shared/assets/login_hero.jpg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticated, saveAuthToken } from "../../shared/utils/auth";
+import { getAuthUser, isAuthenticated, saveAuthToken } from "../../shared/utils/auth";
+
+const getHomePath = (role?: string | null) =>
+  role?.toLowerCase() === "admin" ? "/admin" : "/dashboard";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +15,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate("/dashboard", { replace: true });
+      navigate(getHomePath(getAuthUser()?.role), { replace: true });
     }
   }, [navigate]);
 
@@ -30,7 +33,7 @@ const LoginPage = () => {
     if (response.ok) {
       const data = await response.json();
       saveAuthToken(data.token, data.user);
-      navigate("/dashboard", { replace: true });
+      navigate(getHomePath(data.user?.role), { replace: true });
     } else {
       const errorData = await response.json().catch(() => ({}));
       setErrorMessage(errorData.error || "No se pudo iniciar sesión");

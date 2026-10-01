@@ -43,3 +43,9 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #121212 inset; /* Mismo color de tu fondo */
   -webkit-text-fill-color: #ffffff !important;      /* Color del texto */
 }
+
+  input[type="search"]::-webkit-search-cancel-button {
+    filter: invert(1) brightness(2);
+    cursor: pointer;
+    padding: 2px; /* Espaciado opcional para que se vea mejor */
+  }
