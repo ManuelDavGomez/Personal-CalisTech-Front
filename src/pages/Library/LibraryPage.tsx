@@ -15,59 +15,12 @@ const LibraryPage = () => {
   const [exercise, setExercise] = useState<Skill[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [muscle, setMuscle] = useState<string | null>(null);
-  const [difficulty, setDifficulty] = useState<string | null>(null);
+  const [muscle, setMuscle] = useState<string | null>("");
+  const [difficulty, setDifficulty] = useState<string | null>("");
+  const [text, setText] = useState<string | null>("");
+  const [searchText, setSearchText] = useState<string | null>("");
 
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const obtenerDatos = async () => {
-  //     const token = getAuthToken();
-
-  //     if (!token) {
-  //       navigate("/login", { replace: true });
-  //       return;
-  //     }
-
-  //     try {
-  //       const response = await fetch("http://localhost:3000/tasks/skills", {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       const data = await response.json();
-
-  //       if (!response.ok) {
-  //         throw new Error(data?.message || "Error al obtener los datos");
-  //       }
-
-  //       setElementos(data);
-  //     } catch (err) {
-  //       const message = err instanceof Error ? err.message : "Error inesperado";
-  //       setError(message);
-
-  //       if (
-  //         message.toLowerCase().includes("token") ||
-  //         message.toLowerCase().includes("unauthorized")
-  //       ) {
-  //         navigate("/login", { replace: true });
-  //       }
-  //     } finally {
-  //       setCargando(false);
-  //     }
-  //   };
-
-  //   obtenerDatos();
-  // }, [navigate]);
-
-  // if (cargando) return <p>Cargando información...</p>;
-  // if (error) return <p>Error: {error}</p>;
-  // if (elementos.length === 0)
-  //   return <p>No hay registros disponibles en la base de datos.</p>;
-
-  // const resultadosFiltrados = elementos.filter((item) =>
-  //   item.nombre.toLowerCase().includes(busqueda.toLowerCase()),
-  // );
 
   const RayoIcon = () => (
     <svg
@@ -94,6 +47,14 @@ const LibraryPage = () => {
   };
 
   useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setSearchText(text);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [text]);
+
+  useEffect(() => {
     let active = true;
 
     const loadExercises = async () => {
@@ -107,6 +68,7 @@ const LibraryPage = () => {
       const params = new URLSearchParams();
       if (muscle) params.set("musculos", muscle);
       if (difficulty) params.set("dificultad", difficulty);
+      if (searchText) params.set("texto", searchText);
 
       setCargando(true);
       setError(null);
@@ -140,42 +102,68 @@ const LibraryPage = () => {
     return () => {
       active = false;
     };
-  }, [difficulty, muscle, navigate]);
+  }, [difficulty, muscle, searchText, navigate]);
 
   return (
     <article>
-      <article className="flex flex-row justify-between gap-4 pb-20">
+      <article className="flex flex-col justify-between gap-4 pb-20">
         <section>
-          <h1 className="font-bold text-4xl">Libreria de Ejercicios</h1>
-          <p className="text-gray-500">
-            Explora nuestra colección de ejercicios
-          </p>
+          <input
+            type="text"
+            placeholder="Buscar ejercicios..."
+            value={text || ""}
+            onChange={(e) => setText(e.target.value)}
+            className=" w-3/6 bg-(--secondary-color) rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-(--primary-color) text-white placeholder-(--subtext-color) border border-(--border-color) transition-all duration-300"
+          />
         </section>
-        <section>
-          <select name="musculos" id="musculos" onChange={(e) => setMuscle(e.target.value || null)}>
-            <option value="">Filtrar por músculo</option>
-            <option value="biceps">Bíceps</option>
-            <option value="triceps">Tríceps</option>
-          </select>
-        </section>
-        <section>
-          <select name="dificultad" id="dificultad" onChange={(e) => setDifficulty(e.target.value || null)}>
-            <option value="">Filtrar por dificultad</option>
-            <option value="Principiante">Principiante</option>
-            <option value="Intermedio">Intermedio</option>
-            <option value="Avanzado">Avanzado</option>
-          </select>
-        </section>
+        <article className="flex flex-col sm:flex-row gap-4">
+          <section>
+            <select
+              name="musculos"
+              id="musculos"
+              onChange={(e) => setMuscle(e.target.value || null)}
+              className="w-full py-2 pl-3 pr-2 text-(--subtext-color) text-sm outline-none border-y-0 border-l-0 border-r-10 border-(--secondary-color) rounded-lg bg-(--secondary-color) focus:outline-none focus:ring-2 focus:ring-(--secondary-color) placeholder:(--subtext-color) transition-all duration-300 cursor-pointer"
+            >
+              <option value="" selected >
+                Musculos
+              </option>
+              <option value="Biceps">Bíceps</option>
+              <option value="Triceps">Tríceps</option>
+            </select>
+          </section>
+          <section>
+            <select
+              name="dificultad"
+              id="dificultad"
+              onChange={(e) => setDifficulty(e.target.value || null)}
+              className="w-full py-2 pl-3 pr-2 text-(--subtext-color) text-sm outline-none border-y-0 border-l-0 border-r-10 border-(--secondary-color) rounded-lg bg-(--secondary-color) focus:outline-none focus:ring-2 focus:ring-(--secondary-color) placeholder:(--subtext-color) transition-all duration-300 cursor-pointer"
+            >
+              <option value="">Dificultades</option>
+              <option value="Principiante">Principiante</option>
+              <option value="Intermedio">Intermedio</option>
+              <option value="Avanzado">Avanzado</option>
+            </select>
+          </section>
+        </article>
       </article>
 
-      {cargando && <p>Cargando ejercicios...</p>}
+      {cargando && exercise.length === 0 && <p>Cargando ejercicios...</p>}
+
+      {cargando && exercise.length > 0 && (
+        <p className="text-gray-500">Actualizando...</p>
+      )}
+
       {error && <p role="alert">Error: {error}</p>}
-      {!cargando && !error && exercise.length === 0 && <p>No hay ejercicios disponibles.</p>}
+
+      {!cargando && !error && exercise.length === 0 && (
+        <p>No hay ejercicios disponibles.</p>
+      )}
 
       <article className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {exercise.map((item) => (
           <section
             key={item.id}
+            onClick={() => navigate(`/dashboard/skills/${item.id}`)}
             className="bordermy-2 rounded-lg bg-(--secondary-color) text-white border-(--border-color) cursor-pointer hover:border-(--primary-color) hover:border transition-all duration-300"
           >
             <img

@@ -99,7 +99,7 @@ const SideNav = () => {
   ];
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen ">
       {/* 1. Mobile Top Bar / Header */}
       <div className="flex items-center justify-between px-4 py-3 shadow-sm md:hidden fixed top-0 left-0 right-0 z-40">
         <span className="text-xl font-bold tracking-wider text-indigo-600">
@@ -125,7 +125,7 @@ const SideNav = () => {
       {/* 3. Sidebar Container */}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 flex flex-col w-72 bg-(--tertiary-color) transition-transform duration-300 ease-in-out transform
+        sticky! inset-y-0 left-0 z-50 flex flex-col w-72 bg-(--tertiary-color) transition-transform duration-300 ease-in-out transform 
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         md:translate-x-0 md:static md:z-auto
       `}

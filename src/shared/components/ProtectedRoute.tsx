@@ -10,8 +10,11 @@ const ProtectedRoute = () => {
 
   const authUser = getAuthUser();
 
-  // Block non-admin users from /admin
-  if (location.pathname === "/admin" && authUser?.role?.toLowerCase() !== "admin") {
+  if (
+    (location.pathname === "/admin" ||
+      location.pathname.startsWith("/admin/")) &&
+    authUser?.role?.toLowerCase() !== "admin"
+  ) {
     return <Navigate to="/dashboard" replace />;
   }
 

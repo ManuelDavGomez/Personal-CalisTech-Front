@@ -84,12 +84,10 @@ const ExerciseForm = () => {
   }
 
   return (
-    <section className="rounded-2xl border border-slate-700 bg-slate-900/80 p-6 shadow-2xl shadow-black/20">
-      <h2 className="mb-6 text-2xl font-semibold text-white">Nuevo ejercicio</h2>
-
+    <section className="rounded-2xl border border-(--border-color) bg-(--tertiary-color) p-5 shadow-xl shadow-black/10 sm:p-7">
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="nombre" className="mb-2 block text-sm font-medium text-slate-300">
+          <label htmlFor="nombre" className="mb-2 block text-xs font-semibold text-(--text-color)">
             Nombre del ejercicio
           </label>
           <input
@@ -100,58 +98,63 @@ const ExerciseForm = () => {
             onChange={handleChange}
             placeholder="Sentadilla"
             required
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400"
+            className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
           />
         </div>
 
         <div>
-          <label htmlFor="url_img" className="mb-2 block text-sm font-medium text-slate-300">
-            URL de la imagen
+          <label htmlFor="url_img" className="mb-2 block text-xs font-semibold text-(--text-color)">
+            Imagen <span className="font-normal text-(--subtext-color)">(opcional)</span>
           </label>
           <input
             id="url_img"
             name="url_img"
-            type="text"
+            type="url"
             value={formData.url_img}
             onChange={handleChange}
             placeholder="https://example.com/image.jpg"
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400"
+            className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
           />
+          <p className="mt-2 text-[11px] text-(--subtext-color)">
+            Usa un enlace público para que la imagen pueda visualizarse.
+          </p>
         </div>
 
-        <div>
-          <label htmlFor="musculos" className="mb-2 block text-sm font-medium text-slate-300">
-            Músculos trabajados
-          </label>
-          <input
-            id="musculos"
-            name="musculos"
-            type="text"
-            value={formData.musculos}
-            onChange={handleChange}
-            placeholder="Piernas, glúteos"
-            required
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400"
-          />
-        </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label htmlFor="musculos" className="mb-2 block text-xs font-semibold text-(--text-color)">
+              Músculos trabajados
+            </label>
+            <input
+              id="musculos"
+              name="musculos"
+              type="text"
+              value={formData.musculos}
+              onChange={handleChange}
+              placeholder="Piernas, glúteos"
+              required
+              className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="dificultad" className="mb-2 block text-sm font-medium text-slate-300">
-            Dificultad
-          </label>
-          <select
-            id="dificultad"
-            name="dificultad"
-            value={formData.dificultad}
-            onChange={handleChange}
-            required
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400"
-          >
-            <option value="">Selecciona una dificultad</option>
-            <option value="Facil">Fácil</option>
-            <option value="Media">Media</option>
-            <option value="Dificil">Difícil</option>
-          </select>
+          <div>
+            <label htmlFor="dificultad" className="mb-2 block text-xs font-semibold text-(--text-color)">
+              Dificultad
+            </label>
+            <select
+              id="dificultad"
+              name="dificultad"
+              value={formData.dificultad}
+              onChange={handleChange}
+              required
+              className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
+            >
+              <option value="">Selecciona una dificultad</option>
+              <option value="Facil">Fácil</option>
+              <option value="Media">Media</option>
+              <option value="Dificil">Difícil</option>
+            </select>
+          </div>
         </div>
 
         {errorMessage ? (
@@ -161,7 +164,7 @@ const ExerciseForm = () => {
         ) : null}
 
         {successMessage ? (
-          <p className="rounded-md border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+          <p className="rounded-md border border-(--primary-color)/40 bg-(--primary-color)/10 px-4 py-3 text-sm text-(--primary-color)">
             {successMessage}
           </p>
         ) : null}
@@ -169,9 +172,14 @@ const ExerciseForm = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-md bg-emerald-500 px-5 py-3 font-semibold text-slate-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-(--primary-color) px-5 py-3.5 text-sm font-bold text-(--background-color) transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSubmitting ? "Guardando..." : "Crear ejercicio"}
+          {isSubmitting ? "Guardando ejercicio..." : "Publicar ejercicio"}
+          {!isSubmitting ? (
+            <svg viewBox="0 0 24 24" fill="none" className="size-4" aria-hidden="true">
+              <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : null}
         </button>
       </form>
     </section>

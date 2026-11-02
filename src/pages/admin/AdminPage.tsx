@@ -1,41 +1,38 @@
-import { logout } from "../../shared/utils/auth";
-import { useNavigate } from "react-router-dom";
-import SidenavPanel from "../../shared/components/SideNavPanel";
-import ExerciseForm from "../../shared/components/ExerciseForm";
+import { useLocation, Outlet } from "react-router-dom";
+
+import SideNavAdmin from "../../shared/components/SideNavAdmin";
 
 const AdminPage = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/login", { replace: true });
-  };
+  const location = useLocation();
+  const pageTitle =
+    location.pathname === "/admin/library" ? "Biblioteca" : "Resumen";
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-50">
-      <SidenavPanel />
-
-      <main className="mx-auto max-w-5xl px-6 py-10">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-emerald-400">
-              Panel de administrador
-            </p>
-            <h1 className="mt-2 text-3xl font-bold text-white">
-              Crear ejercicio
-            </h1>
+    <div className="min-h-screen bg-(--background-color) text-(--text-color)">
+      <SideNavAdmin />
+      <main id="inicio" className="min-w-0 lg:ml-72">
+        <header className="flex items-center justify-between border-b border-(--border-color) px-5 py-4 sm:px-8 lg:px-10">
+          <a href="/admin" className="flex items-center gap-2 lg:hidden">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-(--primary-color) font-black text-(--background-color)">
+              C
+            </span>
+            <span className="text-sm font-bold tracking-wide">CALISTECH</span>
+          </a>
+          <p className="hidden text-xs font-medium text-(--subtext-color) sm:block">
+            Panel de administración
+            <span className="px-2 text-(--border-color)">/</span>
+            <span className="text-(--primary-color)">{pageTitle}</span>
+          </p>
+          <div className="ml-auto flex items-center gap-3">
+            <span className="hidden items-center gap-2 rounded-full border border-(--primary-color)/15 bg-(--primary-color)/6 px-3 py-1.5 text-[11px] font-semibold text-(--primary-color) sm:inline-flex">
+              <span className="size-1.5 rounded-full bg-(--primary-color)" />
+              MODO ADMIN
+            </span>
           </div>
-
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-md bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-500"
-          >
-            Cerrar sesión
-          </button>
+        </header>
+        <div className="mx-auto max-w-360 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+          <Outlet />
         </div>
-
-        <ExerciseForm />
       </main>
     </div>
   );
