@@ -1,233 +1,195 @@
-// import { clearAuthToken } from "../../shared/utils/auth";
-import { useNavigate } from "react-router-dom";
-import { getAuthUser, logout } from "../../shared/utils/auth";
 import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { clearAuthToken, getAuthUser } from "../utils/auth";
+
+const navigationItems = [
+  {
+    label: "Resumen",
+    path: "/dashboard",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    ),
+  },
+  {
+    label: "Biblioteca",
+    path: "/dashboard/skills",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+        <path
+          d="M5 4.75h11.5A2.5 2.5 0 0 1 19 7.25v12H7.5A2.5 2.5 0 0 1 5 16.75v-12Z"
+          stroke="currentColor"
+          strokeWidth="1.7"
+        />
+        <path d="M5 16.5A2.5 2.5 0 0 1 7.5 14H19" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    ),
+  },
+];
 
 const SideNav = () => {
-  const authUser = getAuthUser();
-  const roleLabel = authUser?.role === "admin" ? "Administrador" : "Usuario";
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const user = getAuthUser();
+  const displayName = user?.username || user?.email?.split("@")[0] || "Atleta";
+  const initials = displayName
+    .split(/[.\s_-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part: string) => part[0].toUpperCase())
+    .join("");
 
   const handleLogout = () => {
-    logout();
+    clearAuthToken();
     navigate("/login", { replace: true });
   };
 
-  const [isOpen, setIsOpen] = useState(false);
+  const renderNavigation = () => (
+    <nav aria-label="Navegación principal" className="mt-3 space-y-1">
+      {navigationItems.map((item) => (
+        <NavLink
+          key={item.path}
+          to={item.path}
+          end={item.path === "/dashboard"}
+          onClick={() => setIsOpen(false)}
+          className={({ isActive }) =>
+            `flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition ${
+              isActive
+                ? "bg-(--primary-color)/10 font-semibold text-(--primary-color)"
+                : "font-medium text-(--subtext-color) hover:bg-(--secondary-color) hover:text-(--text-color)"
+            }`
+          }
+        >
+          {item.icon}
+          {item.label}
+        </NavLink>
+      ))}
+    </nav>
+  );
 
-  // Navigation items array
-  const menuItems = [
-    {
-      name: "Panel",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="stroke-[#c5c9ac] group-hover:stroke-black! "
-          stroke-width="2"
-          stroke-linecap="butt"
-          stroke-linejoin="arcs"
-        >
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+  const renderUserCard = () => (
+    <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-4">
+      <div className="flex items-center gap-3">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-(--primary-color)/15 text-sm font-bold text-(--primary-color)">
+          {initials || "AT"}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-semibold text-(--text-color)">
+            {displayName}
+          </span>
+          <span className="block truncate text-xs text-(--subtext-color)">
+            {user?.email || "Atleta"}
+          </span>
+        </span>
+      </div>
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-4 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs font-medium text-(--subtext-color) transition hover:bg-(--tertiary-color) hover:text-(--text-color)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" className="size-4" aria-hidden="true">
+          <path
+            d="M10 17l5-5-5-5M15 12H3m9-8h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
-      ),
-      url: "dashboard",
-    },
-    {
-      name: "Libreria",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke-width="2"
-          stroke-linecap="butt"
-          stroke-linejoin="arcs"
-          className="stroke-[#c5c9ac] group-hover:stroke-black! "
-        >
-          <path d="M12 20v-6m0-6V4"></path>
-          <rect x="3" y="10" width="18" height="4"></rect>
-        </svg>
-      ),
-      url: "dashboard/skills",
-    },
-    {
-      name: "Rutina IA",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="stroke-[#c5c9ac] group-hover:stroke-black!"
-          stroke-width="2"
-          stroke-linecap="butt"
-          stroke-linejoin="arcs"
-        >
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" y1="3" x2="12" y2="15"></line>
-        </svg>
-      ),
-    },
-    {
-      name: "Registrar",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="stroke-[#c5c9ac] group-hover:stroke-black! "
-          stroke-width="2"
-          stroke-linecap="butt"
-          stroke-linejoin="arcs"
-        >
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .38 3.83 8.5 8.5 0 0 1-7.63.83h-.79a8.56,8.56,0,0,1-7.63-.83,1.65,1.65,0,0,0,.38-3.83Z"></path>
-        </svg>
-      ),
-    },
-  ];
+        Cerrar sesión
+      </button>
+    </article>
+  );
 
   return (
-    <div className="flex min-h-screen ">
-      {/* 1. Mobile Top Bar / Header */}
-      <div className="flex items-center justify-between px-4 py-3 shadow-sm md:hidden fixed top-0 left-0 right-0 z-40">
-        <span className="text-xl font-bold tracking-wider text-indigo-600">
-          Brand
-        </span>
+    <>
+      <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-between border-b border-(--border-color) bg-(--background-color)/95 px-5 py-3 backdrop-blur lg:hidden">
+        <a href="/dashboard" className="flex items-center gap-2">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-(--primary-color) font-black text-(--background-color)">
+            C
+          </span>
+          <span className="text-sm font-bold tracking-wide text-(--text-color)">
+            CALISTECH
+          </span>
+        </a>
         <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          aria-label="Toggle Menu"
+          type="button"
+          onClick={() => setIsOpen((open) => !open)}
+          className="rounded-lg p-2 text-(--text-color) hover:bg-(--secondary-color)"
+          aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={isOpen}
         >
-          <span className="text-2xl">☰</span>
+          {isOpen ? (
+            <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+              <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          )}
         </button>
       </div>
 
-      {/* 2. Dark Overlay Background for Mobile View */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+        <button
+          type="button"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
           onClick={() => setIsOpen(false)}
+          aria-label="Cerrar menú"
         />
       )}
 
-      {/* 3. Sidebar Container */}
       <aside
-        className={`
-        sticky! inset-y-0 left-0 z-50 flex flex-col w-72 bg-(--tertiary-color) transition-transform duration-300 ease-in-out transform 
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        md:translate-x-0 md:static md:z-auto
-      `}
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-(--border-color) bg-(--tertiary-color) px-5 py-7 transition-transform lg:hidden ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
-        {/* Sidebar Header */}
-        <article className="flex items-center justify-between px-6 py-8 ">
-          <section className="flex flex-col">
-            <span className="text-xl font-black text-(--primary-color)">
-              Calisprogress
+        <a href="/dashboard" className="flex items-center gap-3 px-2">
+          <span className="flex size-11 items-center justify-center rounded-2xl bg-(--primary-color) text-lg font-black text-(--background-color)">
+            C
+          </span>
+          <span>
+            <span className="block font-bold tracking-wide text-(--text-color)">
+              CALISTECH
             </span>
-            <p className="text-sm text-(--subtext-color)">ELITE CALISTHENICS</p>
-          </section>
-
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-1 rounded-md hover:bg-(--primary-color) md:hidden"
-            aria-label="Close Menu"
-          >
-            <span className="text-xl">✕</span>
-          </button>
+            <span className="text-[10px] font-semibold tracking-[0.2em] text-(--subtext-color)">
+              ENTRENAMIENTO
+            </span>
+          </span>
+        </a>
+        <article className="mt-10">
+          <p className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-(--subtext-color)">
+            Mi espacio
+          </p>
+          {renderNavigation()}
         </article>
-
-        {/* Sidebar Navigation Links */}
-        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-          {menuItems.map((item, index) => (
-            <a
-              key={index}
-              href={`/${item.url?.toLowerCase()}`}
-              className="flex items-center px-4 py-3 text-(--text-color) rounded-lg hover:bg-(--primary-color)  hover:text-black transition-colors group font-medium "
-            >
-              <span className="text-xl mr-4 ">{item.icon}</span>
-              {item.name}
-            </a>
-          ))}
-        </nav>
-
-        {/* Sidebar Footer / User Section */}
-        <div className="p-4">
-          <div className="flex items-center gap-3 p-2">
-            <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">
-              JD
-            </div>
-            <div>
-              <p className="text-sm font-bold">{authUser?.username}</p>
-              <p className="text-xs text-gray-400">{authUser?.email}</p>
-              <p className="text-xs text-gray-400">{roleLabel}</p>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="mt-2 rounded-md bg-red-600 px-3 py-1 text-xs font-semibold text-white transition hover:bg-red-500"
-              >
-                Cerrar sesión
-              </button>
-            </div>
-          </div>
-        </div>
+        <div className="mt-auto">{renderUserCard()}</div>
       </aside>
 
-      {/* 4. Main App Layout Window */}
-      {/* <main className="flex-1 p-6 md:p-10 pt-20 md:pt-10 overflow-y-auto">
-        <h1 className="text-3xl font-extrabold tracking-tight">
-          Bienvenido Comandante
-        </h1>
-        <p className="mt-4 text-gray-500 max-w-2xl">Resumen del Rendimiento</p>
-
-        <div className="grid grid-cols-5 grid-rows-5 gap-4 h-150 mt-20">
-          <div className="col-span-2 row-span-2  border border-gray-300">1</div>
-          <div className="col-span-3 row-span-2 col-start-3 border border-gray-300">
-            2
-          </div>
-          <div className="col-span-3 row-span-3 row-start-3 border border-gray-300">
-            3
-          </div>
-          <div className="col-span-2 row-span-2 col-start-4 row-start-3 border border-gray-300">
-            4
-          </div>
-          <div className="col-span-2 col-start-4 row-start-5 border border-gray-300">
-            5
-          </div>
-        </div>
-      </main> */}
-    </div>
-
-    // <article className="flex w-[15%] h-screen items-start flex-col border border-amber-200">
-    //   <section className="flex flex-col items-start justify-center  px-4 py-6">
-    //     <h1 className="text-xl font-bold text-(--text-color)">
-    //       CALIPROGRESS
-    //     </h1>
-    //     <p className="text-lg">Calistenia de elite</p>
-    //   </section>
-
-    //   <p className="text-(--subtext-color)">
-    //     Bienvenido al panel de control. Aquí puedes gestionar tu cuenta y
-    //   </p>
-    //   <button
-    //     type="button"
-    //     onClick={handleLogout}
-    //     className="rounded-md bg-(--primary-color) px-4 py-2 font-semibold text-slate-950"
-    //   >
-    //     Cerrar sesión
-    //   </button>
-    // </article>
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-72 flex-col border-r border-(--border-color) bg-(--tertiary-color) px-5 py-7 lg:flex">
+        <a href="/dashboard" className="flex items-center gap-3 px-2">
+  
+          <span>
+            <span className="block font-bold tracking-wide text-(--text-color)">
+              CALISTECH
+            </span>
+           
+          </span>
+        </a>
+        <article className="mt-10">
+          <p className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-(--subtext-color)">
+            Mi espacio
+          </p>
+          {renderNavigation()}
+        </article>
+        <div className="mt-auto">{renderUserCard()}</div>
+      </aside>
+    </>
   );
 };
 

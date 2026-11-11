@@ -8,6 +8,7 @@ import AdminDashboardPage from "../pages/admin/AdminDashboardPage.tsx";
 import LibraryPage from "../pages/Library/LibraryPage.tsx";
 import ExerciseDetailPage from "../pages/Library/ExerciseDetailPage.tsx";
 import AdminLibraryPage from "../pages/admin/AdminLibraryPage.tsx";
+import DashboardHomePage from "../pages/dashboard/DashboardHomePage.tsx";
 
 function App() {
   return (
@@ -19,14 +20,7 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />}>
-            <Route
-              index
-              element={
-                <h1 className="text-3xl font-semibold">
-                  Bienvenido a CalisTech
-                </h1>
-              }
-            />
+            <Route index element={<DashboardHomePage />} />
             <Route path="skills" element={<LibraryPage />} />
             <Route path="skills/:id" element={<ExerciseDetailPage />} />
           </Route>

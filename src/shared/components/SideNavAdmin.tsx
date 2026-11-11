@@ -35,7 +35,7 @@ const SideNavAdmin = () => {
         </span>
       </a>
 
-      <div className="mt-12">
+      <article className="mt-12">
         <p className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-(--subtext-color)">
           Workspace
         </p>
@@ -150,9 +150,9 @@ const SideNavAdmin = () => {
             </svg>
           </a>
         </nav>
-      </div>
+      </article>
 
-      <div className="mt-auto rounded-2xl border border-(--border-color) bg-(--secondary-color) p-4">
+      <article className="mt-auto rounded-2xl border border-(--border-color) bg-(--secondary-color) p-4">
         <div className="flex items-center gap-3">
           <span className="flex size-10 items-center justify-center rounded-full bg-(--primary-color)/15 text-sm font-bold text-(--primary-color)">
             {initials || "AD"}
@@ -169,7 +169,7 @@ const SideNavAdmin = () => {
         <button
           type="button"
           onClick={handleLogout}
-          className="mt-4 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs font-medium text-(--subtext-color) transition hover:bg-(--tertiary-color) hover:text-(--text-color)"
+          className="mt-4 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs font-medium text-(--subtext-color) transition hover:bg-(--tertiary-color) hover:text-(--text-color)cursor-pointer"
         >
           <svg
             viewBox="0 0 24 24"
@@ -187,7 +187,7 @@ const SideNavAdmin = () => {
           </svg>
           Cerrar sesión
         </button>
-      </div>
+      </article>
     </aside>
   );
 };
