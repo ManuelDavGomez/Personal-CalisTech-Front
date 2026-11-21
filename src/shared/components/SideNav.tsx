@@ -29,6 +29,25 @@ const navigationItems = [
       </svg>
     ),
   },
+  {
+    label: "Registro",
+    path: "/dashboard/workout",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+        <path d="M3 9v6M6 7v10M18 7v10M21 9v6M6 12h12" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Sesiones",
+    path: "/dashboard/sessions",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+        <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.7" />
+        <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
 ];
 
 const SideNav = () => {

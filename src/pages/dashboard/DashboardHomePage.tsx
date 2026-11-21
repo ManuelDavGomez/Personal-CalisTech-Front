@@ -1,8 +1,22 @@
+import { Link } from "react-router-dom";
 import { getAuthUser } from "../../shared/utils/auth";
+import { formatDuration, getWorkouts } from "../../shared/utils/workouts";
 
 const DashboardHomePage = () => {
   const user = getAuthUser();
   const displayName = user?.username || user?.email?.split("@")[0] || "atleta";
+  const workouts = getWorkouts(user?.id);
+  const totalSeconds = workouts.reduce((total, workout) => total + workout.durationSeconds, 0);
+  const totalSets = workouts.reduce(
+    (total, workout) =>
+      total +
+      workout.exercises.reduce(
+        (sets, exercise) => sets + (exercise.setsCompleted ?? exercise.sets.length),
+        0,
+      ),
+    0,
+  );
+  const recentWorkouts = workouts.slice(0, 3);
 
   return (
     <>
@@ -22,11 +36,11 @@ const DashboardHomePage = () => {
               encuentra tu próximo reto en la biblioteca de CalisTech.
             </p>
           </div>
-          <a
-            href="/dashboard/skills"
+          <Link
+            to="/dashboard/sessions"
             className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-(--primary-color) px-5 py-3 text-sm font-bold text-(--background-color) transition hover:brightness-110"
           >
-            Explorar biblioteca
+            Ver sesiones
             <svg viewBox="0 0 24 24" fill="none" className="size-4" aria-hidden="true">
               <path
                 d="M5 12h14m-6-6 6 6-6 6"
@@ -36,9 +50,55 @@ const DashboardHomePage = () => {
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </Link>
         </section>
       </article>
+
+      <section className="mt-8 grid gap-4 sm:grid-cols-3">
+        <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">Sesiones</p>
+          <p className="mt-2 text-3xl font-bold text-(--text-color)">{workouts.length}</p>
+          <p className="mt-1 text-xs text-(--subtext-color)">Entrenamientos registrados</p>
+        </article>
+        <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">Tiempo total</p>
+          <p className="mt-2 text-3xl font-bold text-(--text-color)">{formatDuration(totalSeconds)}</p>
+          <p className="mt-1 text-xs text-(--subtext-color)">Tiempo activo acumulado</p>
+        </article>
+        <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">Series</p>
+          <p className="mt-2 text-3xl font-bold text-(--text-color)">{totalSets}</p>
+          <p className="mt-1 text-xs text-(--subtext-color)">Series completadas</p>
+        </article>
+      </section>
+
+      {recentWorkouts.length > 0 && (
+        <section className="mt-8">
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-(--primary-color)">Historial</p>
+              <h2 className="mt-2 text-xl font-bold text-(--text-color)">Últimos entrenamientos</h2>
+            </div>
+            <Link to="/dashboard/sessions" className="text-xs font-bold text-(--primary-color)">Ver sesiones</Link>
+          </div>
+          <div className="grid gap-3">
+            {recentWorkouts.map((workout) => (
+              <article key={workout.id} className="flex flex-col gap-3 rounded-2xl border border-(--border-color) bg-(--tertiary-color) p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="font-semibold text-(--text-color)">{workout.name}</h3>
+                  <p className="mt-1 text-xs text-(--subtext-color)">
+                    {new Date(workout.date).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" })}
+                  </p>
+                </div>
+                <div className="flex gap-5 text-xs">
+                  <span className="text-(--subtext-color)"><strong className="mr-1 text-white">{workout.exercises.length}</strong>ejercicios</span>
+                  <span className="text-(--subtext-color)"><strong className="mr-1 text-white">{formatDuration(workout.durationSeconds)}</strong>duración</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-8">
         <div className="mb-4">

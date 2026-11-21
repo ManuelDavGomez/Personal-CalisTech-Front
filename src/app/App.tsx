@@ -9,6 +9,8 @@ import LibraryPage from "../pages/Library/LibraryPage.tsx";
 import ExerciseDetailPage from "../pages/Library/ExerciseDetailPage.tsx";
 import AdminLibraryPage from "../pages/admin/AdminLibraryPage.tsx";
 import DashboardHomePage from "../pages/dashboard/DashboardHomePage.tsx";
+import WorkoutPage from "../pages/dashboard/WorkoutPage.tsx";
+import WorkoutSessionsPage from "../pages/dashboard/WorkoutSessionsPage.tsx";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route index element={<DashboardHomePage />} />
             <Route path="skills" element={<LibraryPage />} />
             <Route path="skills/:id" element={<ExerciseDetailPage />} />
+            <Route path="workout" element={<WorkoutPage />} />
+            <Route path="sessions" element={<WorkoutSessionsPage />} />
           </Route>
 
           <Route path="/admin" element={<AdminPanelPage />}>

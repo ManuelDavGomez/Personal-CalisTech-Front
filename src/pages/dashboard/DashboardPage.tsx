@@ -5,7 +5,11 @@ const DashboardPage = () => {
   const { pathname } = useLocation();
   const pageTitle = pathname.startsWith("/dashboard/skills")
     ? "Biblioteca"
-    : "Resumen";
+    : pathname.startsWith("/dashboard/sessions")
+      ? "Sesiones"
+      : pathname.startsWith("/dashboard/workout")
+        ? "Registro de entrenamiento"
+      : "Resumen";
 
   return (
     <article className="min-h-screen bg-(--background-color) text-(--text-color)">
