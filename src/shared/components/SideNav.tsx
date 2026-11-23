@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { clearAuthToken, getAuthUser } from "../utils/auth";
 
 const navigationItems = [
@@ -48,6 +48,16 @@ const navigationItems = [
       </svg>
     ),
   },
+  {
+    label: "Perfil",
+    path: "/dashboard/profile",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="size-5" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.7" />
+        <path d="M5 21v-2a7 7 0 0 1 14 0v2" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      </svg>
+    ),
+  },
 ];
 
 const SideNav = () => {
@@ -91,8 +101,12 @@ const SideNav = () => {
   );
 
   const renderUserCard = () => (
-    <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-4">
-      <div className="flex items-center gap-3">
+    <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-3">
+      <Link
+        to="/dashboard/profile"
+        onClick={() => setIsOpen(false)}
+        className="flex items-center gap-3 rounded-xl p-1 transition hover:bg-(--tertiary-color)"
+      >
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-(--primary-color)/15 text-sm font-bold text-(--primary-color)">
           {initials || "AT"}
         </span>
@@ -104,7 +118,7 @@ const SideNav = () => {
             {user?.email || "Atleta"}
           </span>
         </span>
-      </div>
+      </Link>
       <button
         type="button"
         onClick={handleLogout}

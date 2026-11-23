@@ -9,6 +9,8 @@ const DashboardPage = () => {
       ? "Sesiones"
       : pathname.startsWith("/dashboard/workout")
         ? "Registro de entrenamiento"
+      : pathname.startsWith("/dashboard/profile")
+        ? "Perfil"
       : "Resumen";
 
   return (

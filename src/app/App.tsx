@@ -11,6 +11,7 @@ import AdminLibraryPage from "../pages/admin/AdminLibraryPage.tsx";
 import DashboardHomePage from "../pages/dashboard/DashboardHomePage.tsx";
 import WorkoutPage from "../pages/dashboard/WorkoutPage.tsx";
 import WorkoutSessionsPage from "../pages/dashboard/WorkoutSessionsPage.tsx";
+import ProfilePage from "../pages/dashboard/ProfilePage.tsx";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="skills/:id" element={<ExerciseDetailPage />} />
             <Route path="workout" element={<WorkoutPage />} />
             <Route path="sessions" element={<WorkoutSessionsPage />} />
+            <Route path="profile" element={<ProfilePage />} />
           </Route>
 
           <Route path="/admin" element={<AdminPanelPage />}>
