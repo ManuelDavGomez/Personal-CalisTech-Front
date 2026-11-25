@@ -12,32 +12,35 @@ import DashboardHomePage from "../pages/dashboard/DashboardHomePage.tsx";
 import WorkoutPage from "../pages/dashboard/WorkoutPage.tsx";
 import WorkoutSessionsPage from "../pages/dashboard/WorkoutSessionsPage.tsx";
 import ProfilePage from "../pages/dashboard/ProfilePage.tsx";
+import { AuthProvider } from "../shared/context/AuthProvider";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />}>
-            <Route index element={<DashboardHomePage />} />
-            <Route path="skills" element={<LibraryPage />} />
-            <Route path="skills/:id" element={<ExerciseDetailPage />} />
-            <Route path="workout" element={<WorkoutPage />} />
-            <Route path="sessions" element={<WorkoutSessionsPage />} />
-            <Route path="profile" element={<ProfilePage />} />
-          </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardPage />}>
+              <Route index element={<DashboardHomePage />} />
+              <Route path="skills" element={<LibraryPage />} />
+              <Route path="skills/:id" element={<ExerciseDetailPage />} />
+              <Route path="workout" element={<WorkoutPage />} />
+              <Route path="sessions" element={<WorkoutSessionsPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+            </Route>
 
-          <Route path="/admin" element={<AdminPanelPage />}>
-            <Route index element={<AdminDashboardPage />} />
-            <Route path="library" element={<AdminLibraryPage />} />
+            <Route path="/admin" element={<AdminPanelPage />}>
+              <Route index element={<AdminDashboardPage />} />
+              <Route path="library" element={<AdminLibraryPage />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

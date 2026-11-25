@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getAuthToken, getAuthUser } from "../utils/auth";
+import { useAuth } from "../context/AuthContext";
+import { apiFetch } from "../utils/api";
 
 type ExerciseFormState = {
   nombre: string;
@@ -16,7 +17,7 @@ const initialState: ExerciseFormState = {
 };
 
 const ExerciseForm = () => {
-  const user = getAuthUser();
+  const { user } = useAuth();
   const [formData, setFormData] = useState<ExerciseFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -39,21 +40,13 @@ const ExerciseForm = () => {
       return;
     }
 
-    const token = getAuthToken();
-
-    if (!token) {
-      setErrorMessage("Tu sesión ha expirado. Inicia sesión otra vez.");
-      return;
-    }
-
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:3000/exercises/skills", {
+      const response = await apiFetch("/exercises/skills", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

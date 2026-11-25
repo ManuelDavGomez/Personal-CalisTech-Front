@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getAuthToken, getAuthUser } from "../../shared/utils/auth";
+import { apiFetch } from "../../shared/utils/api";
 import {
   formatDuration,
   saveWorkout,
@@ -37,13 +37,8 @@ const WorkoutPage = () => {
     let active = true;
 
     const loadLibrary = async () => {
-      const token = getAuthToken();
-      if (!token) return;
-
       try {
-        const response = await fetch("http://localhost:3000/exercises/skills", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiFetch("/exercises/skills");
         const data = await response.json();
         if (!response.ok) throw new Error(data?.message || "No se pudo cargar la biblioteca");
         if (active) setLibrary(Array.isArray(data) ? data : []);
@@ -143,26 +138,27 @@ const WorkoutPage = () => {
 
   const stopRest = () => setRestRemaining(0);
 
-  const save = () => {
+  const save = async () => {
     if (exercises.length === 0) {
       setError("Añade al menos un ejercicio al entrenamiento.");
       return;
     }
 
-    const user = getAuthUser();
-    saveWorkout(
-      {
-        name: workoutName.trim() || `Entrenamiento ${new Date().toLocaleDateString("es-ES")}`,
-        date: new Date().toISOString(),
-        durationSeconds: elapsed,
-        exercises,
-      },
-      user?.id,
-    );
-
-    setRunning(false);
-    setSaved(true);
-    setError(null);
+    try {
+      await saveWorkout(
+        {
+          name: workoutName.trim() || `Entrenamiento ${new Date().toLocaleDateString("es-ES")}`,
+          date: new Date().toISOString(),
+          durationSeconds: elapsed,
+          exercises,
+        },
+      );
+      setRunning(false);
+      setSaved(true);
+      setError(null);
+    } catch (saveError) {
+      setError(saveError instanceof Error ? saveError.message : "No se pudo guardar el entrenamiento.");
+    }
   };
 
   const filteredLibrary = library.filter((skill) =>

@@ -2,7 +2,8 @@ import "../../app/styles/App.css";
 import Login_img from "../../shared/assets/login_hero.jpg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuthUser, isAuthenticated, saveAuthToken } from "../../shared/utils/auth";
+import { useAuth } from "../../shared/context/AuthContext";
+import { apiFetch } from "../../shared/utils/api";
 
 const getHomePath = (role?: string | null) =>
   role?.toLowerCase() === "admin" ? "/admin" : "/dashboard";
@@ -12,17 +13,18 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const { user, loading, setUser } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated()) {
-      navigate(getHomePath(getAuthUser()?.role), { replace: true });
+    if (!loading && user) {
+      navigate(getHomePath(user.role), { replace: true });
     }
-  }, [navigate]);
+  }, [loading, navigate, user]);
 
   const handleLogin = async () => {
     setErrorMessage("");
 
-    const response = await fetch("http://localhost:3000/auth/login", {
+    const response = await apiFetch("/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,7 +34,7 @@ const LoginPage = () => {
 
     if (response.ok) {
       const data = await response.json();
-      saveAuthToken(data.token, data.user);
+      setUser(data.user);
       navigate(getHomePath(data.user?.role), { replace: true });
     } else {
       const errorData = await response.json().catch(() => ({}));

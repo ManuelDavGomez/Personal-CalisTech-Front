@@ -6,7 +6,7 @@ import {
   type WorkoutExercise,
   type WorkoutRecord,
 } from "../../shared/utils/workouts";
-import { getAuthToken, getAuthUser } from "../../shared/utils/auth";
+import { apiFetch } from "../../shared/utils/api";
 
 interface Skill {
   id: string | number;
@@ -78,9 +78,9 @@ const difficultyStyles: Record<string, string> = {
 };
 
 const WorkoutSessionsPage = () => {
-  const user = getAuthUser();
   const [library, setLibrary] = useState<Skill[]>([]);
-  const [history, setHistory] = useState<WorkoutRecord[]>(() => getWorkouts(user?.id));
+  const [history, setHistory] = useState<WorkoutRecord[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<View>("routines");
@@ -117,17 +117,8 @@ const WorkoutSessionsPage = () => {
     let active = true;
 
     const loadExercises = async () => {
-      const token = getAuthToken();
-      if (!token) {
-        setError("Tu sesión expiró. Inicia sesión para ver las sesiones.");
-        setLoading(false);
-        return;
-      }
-
       try {
-        const response = await fetch("http://localhost:3000/exercises/skills", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiFetch("/exercises/skills");
         const data: unknown = await response.json();
 
         if (!response.ok) {
@@ -164,6 +155,31 @@ const WorkoutSessionsPage = () => {
     };
 
     void loadExercises();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    getWorkouts()
+      .then((records) => {
+        if (active) setHistory(records);
+      })
+      .catch((requestError: unknown) => {
+        if (active) {
+          setError(
+            requestError instanceof Error
+              ? requestError.message
+              : "No se pudo cargar el historial de entrenamientos.",
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setHistoryLoading(false);
+      });
+
     return () => {
       active = false;
     };
@@ -265,14 +281,14 @@ const WorkoutSessionsPage = () => {
     setRunning(true);
   };
 
-  const finishRoutine = () => {
+  const finishRoutine = async () => {
     const durationSeconds = running
       ? elapsedBeforeStartRef.current +
         Math.floor((getCurrentTime() - startedAtRef.current) / 1000)
       : elapsed;
 
     try {
-      const record = saveWorkout(
+      const record = await saveWorkout(
         {
           name: routineName,
           date: new Date().toISOString(),
@@ -282,7 +298,6 @@ const WorkoutSessionsPage = () => {
             setsCompleted: setsPerExercise,
           })),
         },
-        user?.id,
       );
       setHistory((current) => [record, ...current]);
       setElapsed(durationSeconds);
@@ -884,6 +899,8 @@ const WorkoutSessionsPage = () => {
             </button>
           </div>
         )
+      ) : historyLoading ? (
+        <p className="py-12 text-center text-sm text-(--subtext-color)">Cargando historial...</p>
       ) : filteredHistory.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-(--border-color) p-10 text-center">
           <h2 className="font-semibold text-white">Aún no hay sesiones guardadas</h2>

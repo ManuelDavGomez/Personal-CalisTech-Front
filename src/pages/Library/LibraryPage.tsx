@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuthToken } from "../../shared/utils/auth";
+import { apiFetch } from "../../shared/utils/api";
 
 interface Skill {
   id: string;
@@ -58,13 +58,6 @@ const LibraryPage = () => {
     let active = true;
 
     const loadExercises = async () => {
-      const token = getAuthToken();
-
-      if (!token) {
-        navigate("/login", { replace: true });
-        return;
-      }
-
       const params = new URLSearchParams();
       if (muscle) params.set("musculos", muscle);
       if (difficulty) params.set("dificultad", difficulty);
@@ -74,10 +67,7 @@ const LibraryPage = () => {
       setError(null);
 
       try {
-        const response = await fetch(
-          `http://localhost:3000/exercises/skills?${params.toString()}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const response = await apiFetch(`/exercises/skills?${params.toString()}`);
         const data = await response.json();
 
         if (!response.ok) {

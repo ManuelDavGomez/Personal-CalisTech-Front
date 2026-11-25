@@ -1,10 +1,9 @@
-import { getAuthToken, getAuthUser } from "../../shared/utils/auth";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../shared/context/AuthContext";
+import { apiFetch } from "../../shared/utils/api";
 
-const fetchStat = async (metric: "usuarios" | "ejercicios", token: string) => {
-  const response = await fetch(`http://localhost:3000/stats/${metric}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+const fetchStat = async (metric: "usuarios" | "ejercicios") => {
+  const response = await apiFetch(`/stats/${metric}`);
   const contentType = response.headers.get("content-type") ?? "";
 
   if (!contentType.includes("application/json")) {
@@ -29,25 +28,11 @@ const fetchStat = async (metric: "usuarios" | "ejercicios", token: string) => {
 const AdminDashboardPage = () => {
   const [totalUsers, setTotalUsers] = useState<number | null>(null);
   const [totalExercises, setTotalExercises] = useState<number | null>(null);
-  const [usersError, setUsersError] = useState<string | null>(() =>
-    getAuthToken()
-      ? null
-      : "Inicia sesión como administrador para consultar los usuarios.",
-  );
-  const [exercisesError, setExercisesError] = useState<string | null>(() =>
-    getAuthToken()
-      ? null
-      : "Inicia sesión como administrador para consultar los ejercicios.",
-  );
+  const [usersError, setUsersError] = useState<string | null>(null);
+  const [exercisesError, setExercisesError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = getAuthToken();
-
-    if (!token) {
-      return;
-    }
-
-    void fetchStat("usuarios", token)
+    void fetchStat("usuarios")
       .then(setTotalUsers)
       .catch((error: unknown) => {
         setUsersError(
@@ -57,7 +42,7 @@ const AdminDashboardPage = () => {
         );
       });
 
-    void fetchStat("ejercicios", token)
+    void fetchStat("ejercicios")
       .then(setTotalExercises)
       .catch((error: unknown) => {
         setExercisesError(
@@ -68,7 +53,7 @@ const AdminDashboardPage = () => {
       });
   }, []);
 
-  const user = getAuthUser();
+  const { user } = useAuth();
   const displayName =
     user?.username || user?.email?.split("@")[0] || "Administrador";
 

@@ -1,13 +1,7 @@
-// import { clearAuthToken } from "../../shared/utils/auth";
 // import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const SideNav = () => {
-  //   const handleLogout = () => {
-  //     clearAuthToken();
-  //     navigate("/login", { replace: true });
-  //   };
-
   //   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);

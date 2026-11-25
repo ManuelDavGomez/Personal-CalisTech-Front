@@ -1,9 +1,11 @@
-import { clearAuthToken, getAuthUser } from "../../shared/utils/auth";
+import { useAuth } from "../../shared/context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const SideNavAdmin = () => {
   const navigate = useNavigate();
-  const user = getAuthUser();
+  const { user, logout } = useAuth();
+  const [logoutError, setLogoutError] = useState("");
 
   const displayName =
     user?.username || user?.email?.split("@")[0] || "Administrador";
@@ -14,9 +16,14 @@ const SideNavAdmin = () => {
     .map((part: string) => part[0].toUpperCase())
     .join("");
 
-  const handleLogout = () => {
-    clearAuthToken();
-    navigate("/login", { replace: true });
+  const handleLogout = async () => {
+    setLogoutError("");
+    try {
+      await logout();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      setLogoutError(error instanceof Error ? error.message : "No se pudo cerrar la sesión.");
+    }
   };
 
   return (
@@ -187,6 +194,7 @@ const SideNavAdmin = () => {
           </svg>
           Cerrar sesión
         </button>
+        {logoutError && <p className="mt-2 text-xs text-red-300" role="alert">{logoutError}</p>}
       </article>
     </aside>
   );

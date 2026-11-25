@@ -1,5 +1,11 @@
 # React + TypeScript + Vite
 
+## Sesiones y datos
+
+La autenticación usa una cookie HttpOnly emitida por el backend; el token no se guarda en `localStorage` ni `sessionStorage`. Los entrenamientos se guardan por usuario en PostgreSQL. Al iniciar, el backend crea la tabla `workouts` si no existe; la base de datos y la tabla `users` deben estar configuradas previamente.
+
+El frontend usa `http://localhost:3000` como API por defecto. Configura `VITE_API_URL` si el backend está en otra dirección. Configura `FRONTEND_URL` en el backend para permitir credenciales desde el origen del frontend. El backend escucha en el puerto `3000` por defecto y acepta `PORT` para cambiarlo.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

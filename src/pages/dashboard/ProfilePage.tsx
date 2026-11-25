@@ -1,12 +1,38 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuthUser } from "../../shared/utils/auth";
-import { formatDuration, getWorkouts } from "../../shared/utils/workouts";
+import { useAuth } from "../../shared/context/AuthContext";
+import { formatDuration, getWorkouts, type WorkoutRecord } from "../../shared/utils/workouts";
 
 const ProfilePage = () => {
-  const user = getAuthUser();
+  const { user } = useAuth();
   const displayName = user?.username || user?.email?.split("@")[0] || "Atleta";
   const email = user?.email || "No disponible";
-  const workouts = getWorkouts(user?.id);
+  const [workouts, setWorkouts] = useState<WorkoutRecord[]>([]);
+  const [workoutsLoading, setWorkoutsLoading] = useState(true);
+  const [workoutsError, setWorkoutsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    getWorkouts()
+      .then((records) => {
+        if (active) setWorkouts(records);
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setWorkoutsError(
+            error instanceof Error ? error.message : "No se pudieron cargar las sesiones.",
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setWorkoutsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const totalSeconds = workouts.reduce((total, workout) => total + workout.durationSeconds, 0);
   const totalExercises = workouts.reduce((total, workout) => total + workout.exercises.length, 0);
   const totalSets = workouts.reduce(
@@ -30,6 +56,7 @@ const ProfilePage = () => {
 
   return (
     <div className="mx-auto max-w-5xl">
+      {workoutsError && <p className="mb-5 text-sm text-red-300" role="alert">{workoutsError}</p>}
       <article className="relative overflow-hidden rounded-3xl border border-(--border-color) bg-(--secondary-color)">
         <div className="h-32 bg-[linear-gradient(135deg,rgba(212,255,0,0.18),rgba(212,255,0,0.02)_55%,rgba(14,14,14,0.9))] sm:h-40" />
         <div className="px-6 pb-7 sm:px-8">
@@ -61,10 +88,10 @@ const ProfilePage = () => {
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          ["Sesiones", workouts.length, "entrenamientos"],
-          ["Tiempo activo", formatDuration(totalSeconds), "acumulado"],
-          ["Ejercicios", totalExercises, "registrados"],
-          ["Series", totalSets, "completadas"],
+          ["Sesiones", workoutsLoading ? "…" : workouts.length, "entrenamientos"],
+          ["Tiempo activo", workoutsLoading ? "…" : formatDuration(totalSeconds), "acumulado"],
+          ["Ejercicios", workoutsLoading ? "…" : totalExercises, "registrados"],
+          ["Series", workoutsLoading ? "…" : totalSets, "completadas"],
         ].map(([label, value, caption]) => (
           <article key={String(label)} className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">

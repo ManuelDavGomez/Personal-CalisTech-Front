@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getAuthToken } from "../../shared/utils/auth";
+import { apiFetch } from "../../shared/utils/api";
 
 interface Skill {
   id: string | number;
@@ -49,13 +49,6 @@ const ExerciseDetailPage = () => {
     let active = true;
 
     const loadExercise = async () => {
-      const token = getAuthToken();
-
-      if (!token) {
-        navigate("/login", { replace: true });
-        return;
-      }
-
       if (!id) {
         setError("No se indicó qué ejercicio quieres consultar.");
         setLoading(false);
@@ -66,9 +59,7 @@ const ExerciseDetailPage = () => {
       setError(null);
 
       try {
-        const response = await fetch("http://localhost:3000/exercises/skills", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await apiFetch("/exercises/skills");
         const data: unknown = await response.json();
 
         if (!response.ok) {

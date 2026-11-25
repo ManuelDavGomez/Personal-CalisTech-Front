@@ -2,7 +2,8 @@ import "../../app/styles/App.css";
 import Register_img from "../../shared/assets/register_hero.jpg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticated } from "../../shared/utils/auth";
+import { useAuth } from "../../shared/context/AuthContext";
+import { apiFetch } from "../../shared/utils/api";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -13,12 +14,13 @@ const RegisterPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated()) {
+    if (!loading && user) {
       navigate("/dashboard", { replace: true });
     }
-  }, [navigate]);
+  }, [loading, navigate, user]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -32,7 +34,7 @@ const RegisterPage = () => {
     setErrorMessage("");
     setSuccessMessage("");
 
-    const response = await fetch("http://localhost:3000/auth/register", {
+    const response = await apiFetch("/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

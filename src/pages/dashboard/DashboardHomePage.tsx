@@ -1,11 +1,37 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAuthUser } from "../../shared/utils/auth";
-import { formatDuration, getWorkouts } from "../../shared/utils/workouts";
+import { useAuth } from "../../shared/context/AuthContext";
+import { formatDuration, getWorkouts, type WorkoutRecord } from "../../shared/utils/workouts";
 
 const DashboardHomePage = () => {
-  const user = getAuthUser();
+  const { user } = useAuth();
   const displayName = user?.username || user?.email?.split("@")[0] || "atleta";
-  const workouts = getWorkouts(user?.id);
+  const [workouts, setWorkouts] = useState<WorkoutRecord[]>([]);
+  const [workoutsLoading, setWorkoutsLoading] = useState(true);
+  const [workoutsError, setWorkoutsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    getWorkouts()
+      .then((records) => {
+        if (active) setWorkouts(records);
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setWorkoutsError(
+            error instanceof Error ? error.message : "No se pudieron cargar las sesiones.",
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setWorkoutsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const totalSeconds = workouts.reduce((total, workout) => total + workout.durationSeconds, 0);
   const totalSets = workouts.reduce(
     (total, workout) =>
@@ -20,6 +46,7 @@ const DashboardHomePage = () => {
 
   return (
     <>
+      {workoutsError && <p className="mb-5 text-sm text-red-300" role="alert">{workoutsError}</p>}
       <article className="relative overflow-hidden rounded-3xl border border-(--border-color) bg-(--secondary-color) px-6 py-7 sm:px-9 sm:py-9">
         <div className="pointer-events-none absolute -right-14 -top-32 size-80 rounded-full bg-(--primary-color)/[0.07] blur-3xl" />
         <section className="relative flex flex-col justify-between gap-6 md:flex-row md:items-end">
@@ -57,17 +84,17 @@ const DashboardHomePage = () => {
       <section className="mt-8 grid gap-4 sm:grid-cols-3">
         <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">Sesiones</p>
-          <p className="mt-2 text-3xl font-bold text-(--text-color)">{workouts.length}</p>
+          <p className="mt-2 text-3xl font-bold text-(--text-color)">{workoutsLoading ? "…" : workouts.length}</p>
           <p className="mt-1 text-xs text-(--subtext-color)">Entrenamientos registrados</p>
         </article>
         <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">Tiempo total</p>
-          <p className="mt-2 text-3xl font-bold text-(--text-color)">{formatDuration(totalSeconds)}</p>
+          <p className="mt-2 text-3xl font-bold text-(--text-color)">{workoutsLoading ? "…" : formatDuration(totalSeconds)}</p>
           <p className="mt-1 text-xs text-(--subtext-color)">Tiempo activo acumulado</p>
         </article>
         <article className="rounded-2xl border border-(--border-color) bg-(--secondary-color) p-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-(--subtext-color)">Series</p>
-          <p className="mt-2 text-3xl font-bold text-(--text-color)">{totalSets}</p>
+          <p className="mt-2 text-3xl font-bold text-(--text-color)">{workoutsLoading ? "…" : totalSets}</p>
           <p className="mt-1 text-xs text-(--subtext-color)">Series completadas</p>
         </article>
       </section>
