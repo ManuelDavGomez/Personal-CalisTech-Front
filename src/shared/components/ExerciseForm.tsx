@@ -7,6 +7,10 @@ type ExerciseFormState = {
   musculos: string;
   dificultad: string;
   url_img: string;
+  categorias: string;
+  pasos: string;
+  descripcion: string;
+  materiales: string;
 };
 
 const initialState: ExerciseFormState = {
@@ -14,6 +18,10 @@ const initialState: ExerciseFormState = {
   musculos: "",
   dificultad: "",
   url_img: "",
+  categorias: "",
+  pasos: "",
+  descripcion: "",
+  materiales: "",
 };
 
 const ExerciseForm = () => {
@@ -24,7 +32,9 @@ const ExerciseForm = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
   ) => {
     const { name, value } = event.target;
     setFormData((previous) => ({ ...previous, [name]: value }));
@@ -80,7 +90,10 @@ const ExerciseForm = () => {
     <section className="rounded-2xl border border-(--border-color) bg-(--tertiary-color) p-5 shadow-xl shadow-black/10 sm:p-7">
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="nombre" className="mb-2 block text-xs font-semibold text-(--text-color)">
+          <label
+            htmlFor="nombre"
+            className="mb-2 block text-xs font-semibold text-(--text-color)"
+          >
             Nombre del ejercicio
           </label>
           <input
@@ -96,8 +109,14 @@ const ExerciseForm = () => {
         </div>
 
         <div>
-          <label htmlFor="url_img" className="mb-2 block text-xs font-semibold text-(--text-color)">
-            Imagen <span className="font-normal text-(--subtext-color)">(opcional)</span>
+          <label
+            htmlFor="url_img"
+            className="mb-2 block text-xs font-semibold text-(--text-color)"
+          >
+            Imagen{" "}
+            <span className="font-normal text-(--subtext-color)">
+              (opcional)
+            </span>
           </label>
           <input
             id="url_img"
@@ -115,7 +134,10 @@ const ExerciseForm = () => {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label htmlFor="musculos" className="mb-2 block text-xs font-semibold text-(--text-color)">
+            <label
+              htmlFor="musculos"
+              className="mb-2 block text-xs font-semibold text-(--text-color)"
+            >
               Músculos trabajados
             </label>
             <input
@@ -131,7 +153,10 @@ const ExerciseForm = () => {
           </div>
 
           <div>
-            <label htmlFor="dificultad" className="mb-2 block text-xs font-semibold text-(--text-color)">
+            <label
+              htmlFor="dificultad"
+              className="mb-2 block text-xs font-semibold text-(--text-color)"
+            >
               Dificultad
             </label>
             <select
@@ -148,7 +173,84 @@ const ExerciseForm = () => {
               <option value="Dificil">Difícil</option>
             </select>
           </div>
+
+          <div>
+            <label
+              htmlFor="categorias"
+              className="mb-2 block text-xs font-semibold text-(--text-color)"
+            >
+              Categorías
+            </label>
+            <input
+              id="categorias"
+              name="categorias"
+              type="text"
+              value={formData.categorias}
+              onChange={handleChange}
+              placeholder="Categoría 1, Categoría 2"
+              className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="materiales"
+              className="mb-2 block text-xs font-semibold text-(--text-color)"
+            >
+              Materiales
+            </label>
+            <input
+              id="materiales"
+              name="materiales"
+              type="text"
+              value={formData.materiales}
+              onChange={handleChange}
+              placeholder="Mancuernas, Banda elástica"
+              className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="pasos"
+              className="mb-2 block text-xs font-semibold text-(--text-color)"
+            >
+              Pasos
+            </label>
+            <textarea
+              id="pasos"
+              name="pasos"
+              value={formData.pasos}
+              onChange={handleChange}
+              placeholder="Paso 1, Paso 2, Paso 3"
+              className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
+              rows={4}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label
+              htmlFor="descripcion"
+              className="mb-2 block text-xs font-semibold text-(--text-color)"
+            >
+              Descripción
+            </label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              value={formData.descripcion}
+              onChange={handleChange}
+              placeholder="Describe brevemente el ejercicio"
+              className="w-full rounded-xl border border-(--border-color) bg-(--background-color) px-4 py-3 text-sm text-(--text-color) outline-none transition placeholder:text-(--subtext-color) focus:border-(--primary-color) focus:ring-2 focus:ring-(--primary-color)/10"
+              rows={3}
+            />
+          </div>
         </div>
+
+        <p className="text-xs text-(--subtext-color)">
+          Separa músculos, categorías, materiales y pasos con comas si agregas
+          varios elementos.
+        </p>
 
         {errorMessage ? (
           <p className="rounded-md border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -169,8 +271,19 @@ const ExerciseForm = () => {
         >
           {isSubmitting ? "Guardando ejercicio..." : "Publicar ejercicio"}
           {!isSubmitting ? (
-            <svg viewBox="0 0 24 24" fill="none" className="size-4" aria-hidden="true">
-              <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="size-4"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 12h14m-6-6 6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           ) : null}
         </button>

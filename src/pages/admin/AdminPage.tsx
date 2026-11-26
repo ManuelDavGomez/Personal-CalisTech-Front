@@ -10,14 +10,8 @@ const AdminPage = () => {
   return (
     <article className="min-h-screen bg-(--background-color) text-(--text-color)">
       <SideNavAdmin />
-      <main id="inicio" className="min-w-0 lg:ml-72">
+      <main id="inicio" className="min-w-0 pt-14 lg:ml-72 lg:pt-0">
         <header className="flex items-center justify-between border-b border-(--border-color) px-5 py-4 sm:px-8 lg:px-10">
-          <a href="/admin" className="flex items-center gap-2 lg:hidden">
-            <span className="flex size-9 items-center justify-center rounded-xl bg-(--primary-color) font-black text-(--background-color)">
-              C
-            </span>
-            <span className="text-sm font-bold tracking-wide">CALISTECH</span>
-          </a>
           <p className="hidden text-xs font-medium text-(--subtext-color) sm:block">
             Panel de administración
             <span className="px-2 text-(--border-color)">/</span>
